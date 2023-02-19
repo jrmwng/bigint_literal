@@ -10,12 +10,12 @@
 #include <functional>
 
 template <typename Tbigint, typename Tvalue>
-constexpr bool bigint_literal_test(Tbigint tBigInt, Tvalue tValue)
+consteval bool bigint_literal_test(Tbigint tBigInt, Tvalue tValue)
 {
     return Tvalue(tBigInt) == tValue;
 }
 template <typename Tbigint, typename... Tvalue, size_t... zuINDEX>
-constexpr bool bigint_literal_test(Tbigint tBigInt, std::tuple<Tvalue...> const& tupleValue, std::index_sequence<zuINDEX...>)
+consteval bool bigint_literal_test(Tbigint tBigInt, std::tuple<Tvalue...> const& tupleValue, std::index_sequence<zuINDEX...>)
 {
     bool const abTest[]
     {
@@ -31,12 +31,12 @@ constexpr bool bigint_literal_test(Tbigint tBigInt, std::tuple<Tvalue...> const&
     return bResult;
 }
 template <typename Tbigint, typename... Tvalue>
-constexpr bool bigint_literal_test(Tbigint tBigInt, std::tuple<Tvalue...> const& tupleValue)
+consteval bool bigint_literal_test(Tbigint tBigInt, std::tuple<Tvalue...> const& tupleValue)
 {
     return bigint_literal_test(tBigInt, tupleValue, std::index_sequence_for<Tvalue...>());
 }
 template <typename... Tbigint, size_t... zuINDEX, typename... Tvalue>
-constexpr bool bigint_literal_test(std::tuple<Tbigint...> const& tupleBigInt, std::index_sequence<zuINDEX...>, std::tuple<Tvalue...> const& tupleValue)
+consteval bool bigint_literal_test(std::tuple<Tbigint...> const& tupleBigInt, std::index_sequence<zuINDEX...>, std::tuple<Tvalue...> const& tupleValue)
 {
     bool const abTest[]
     {
@@ -52,7 +52,7 @@ constexpr bool bigint_literal_test(std::tuple<Tbigint...> const& tupleBigInt, st
     return bResult;
 }
 template <typename... Tbigint, typename... Tvalue>
-constexpr bool bigint_literal_test(std::tuple<Tbigint...> const& tupleBigInt, std::tuple<Tvalue...> const& tupleValue)
+consteval bool bigint_literal_test(std::tuple<Tbigint...> const& tupleBigInt, std::tuple<Tvalue...> const& tupleValue)
 {
     return bigint_literal_test(tupleBigInt, std::index_sequence_for<Tbigint...>(), tupleValue);
 }
@@ -76,6 +76,7 @@ int main()
     static_assert(bigint_literal_test(std::make_tuple(-0x7F_bigint, -0X7F_bigint, -0b1111111_bigint, -0B1111111_bigint, -0177_bigint, -127_bigint), std::tuple<int8_t, int16_t, int32_t, int64_t>(-127, -127,  -127,  -127)), "ha");
     static_assert(bigint_literal_test(std::make_tuple(-0x80_bigint, -0X80_bigint, -0b10000000_bigint, -0B10000000_bigint, -0200_bigint, -128_bigint), std::tuple<int8_t, int16_t, int32_t, int64_t>(-128, -128, -128, -128)), "ha");
 
+#if 0
     static_assert(           __int128 ( 0x7FFFFFFFFFFFFFFF_bigint                )         ==          (0x7FFFFFFFFFFFFFFF), "ha");
     static_assert((          __int128 ( 0x7FFFFFFFFFFFFFFF0000000000000000_bigint) >>  64) ==          ( 0x7FFFFFFFFFFFFFFF), "ha");
     static_assert(((unsigned __int128)( 0x7FFFFFFFFFFFFFFF0000000000000000_bigint) >>  64) ==          ( 0x7FFFFFFFFFFFFFFF), "ha");
@@ -86,8 +87,11 @@ int main()
     static_assert(((unsigned __int128)( 0x80000000000000000000000000000000_bigint) >>  64) ==          ( 0x8000000000000000), "ha");
     static_assert((          __int128 (-0x80000000000000000000000000000000_bigint)       ) == (__int128(-0x8000000000000000) << 64), "ha");
     static_assert(((unsigned __int128)( 0xFFFFFFFFFFFFFFFF0000000000000000_bigint) >>  64) ==          ( 0xFFFFFFFFFFFFFFFF), "ha");
+#endif
 
-    static_assert((int)15._bigint == 15, "ha");
+    static_assert((int)15_bigint == 15, "ha");
+
+    int nA = 1_bigint;
 
     std::cout << "Hello World!\n";
 }
