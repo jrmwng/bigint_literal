@@ -16,7 +16,7 @@ namespace jrmwng
 			char const* const pcLiteral;
 
 			template <typename Tint>
-			consteval operator Tint () const
+			constexpr operator Tint () const
 			{
 				Tint tInt(0);
 				{
@@ -67,7 +67,7 @@ namespace jrmwng
 				return tInt;
 			}
 
-			consteval bigint_literal<nRADIX, !bNEGATE> operator- () const
+			constexpr bigint_literal<nRADIX, !bNEGATE> operator- () const
 			{
 				return{ pcLiteral };
 			}
@@ -81,7 +81,12 @@ namespace jrmwng
 			char const* const pcLiteral;
 
 			template <typename Tint>
-			consteval operator Tint () const
+#ifdef __cpp_consteval
+			consteval // 'consteval' enables compile-time value be generated in more use cases
+#else
+			constexpr 
+#endif
+			operator Tint () const
 			{
 				char const* pcDigit = pcLiteral;
 
@@ -102,14 +107,14 @@ namespace jrmwng
 				return Tbigint_literal<10>{pcDigit};
 			}
 
-			consteval bigint_literal<0, !bNEGATE> operator- () const
+			constexpr bigint_literal<0, !bNEGATE> operator- () const
 			{
 				return{ pcLiteral };
 			}
 		};
 	};
 }
-consteval jrmwng::like2023::bigint_literal<0, false> operator"" _bigint(char const* pcLiteral)
+constexpr jrmwng::like2023::bigint_literal<0, false> operator"" _bigint(char const* pcLiteral)
 {
 	return{ pcLiteral };
 }
