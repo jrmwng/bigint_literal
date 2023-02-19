@@ -8,7 +8,7 @@ namespace jrmwng
 {
 	namespace like2023
 	{
-		template <int nRADIX = 0, bool bNEGATE = false, bool bDEBUG = false>
+		template <int nRADIX = 0, bool bNEGATE = false>
 		struct bigint_literal
 		{
 			static_assert(nRADIX <= 16, "Up to hexadecimal only");
@@ -34,10 +34,7 @@ namespace jrmwng
 						}
 						else if (nRADIX <= 10)
 						{
-							if (bDEBUG)
-							{
-								throw pcLiteral;
-							}
+							throw;
 						}
 						else
 						{
@@ -53,10 +50,7 @@ namespace jrmwng
 							}
 							else
 							{
-								if (bDEBUG)
-								{
-									throw pcLiteral;
-								}
+								throw;
 							}
 						}
 
@@ -73,16 +67,16 @@ namespace jrmwng
 				return tInt;
 			}
 
-			constexpr bigint_literal<nRADIX, !bNEGATE, bDEBUG> operator- () const
+			constexpr bigint_literal<nRADIX, !bNEGATE> operator- () const
 			{
 				return{ pcLiteral };
 			}
 		};
-		template <bool bNEGATE, bool bDEBUG>
-		struct bigint_literal<0, bNEGATE, bDEBUG>
+		template <bool bNEGATE>
+		struct bigint_literal<0, bNEGATE>
 		{
 			template <int nRADIX>
-			using Tbigint_literal = bigint_literal<nRADIX, bNEGATE, bDEBUG>;
+			using Tbigint_literal = bigint_literal<nRADIX, bNEGATE>;
 
 			char const* const pcLiteral;
 
@@ -108,18 +102,14 @@ namespace jrmwng
 				return Tbigint_literal<10>{pcDigit};
 			}
 
-			constexpr bigint_literal<0, !bNEGATE, bDEBUG> operator- () const
+			constexpr bigint_literal<0, !bNEGATE> operator- () const
 			{
 				return{ pcLiteral };
 			}
 		};
 	};
 }
-constexpr jrmwng::like2023::bigint_literal<0, false, false> operator"" _bigint(char const* pcLiteral)
-{
-	return{ pcLiteral };
-}
-constexpr jrmwng::like2023::bigint_literal<0, false, true> operator"" _dbgint(char const* pcLiteral)
+constexpr jrmwng::like2023::bigint_literal<0, false> operator"" _bigint(char const* pcLiteral)
 {
 	return{ pcLiteral };
 }
