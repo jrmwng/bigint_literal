@@ -10,12 +10,22 @@
 #include <functional>
 
 template <typename Tbigint, typename Tvalue>
-consteval bool bigint_literal_test(Tbigint tBigInt, Tvalue tValue)
+#ifdef __cpp_consteval
+consteval
+#else
+constexpr
+#endif
+bool bigint_literal_test(Tbigint tBigInt, Tvalue tValue)
 {
     return Tvalue(tBigInt) == tValue;
 }
 template <typename Tbigint, typename... Tvalue, size_t... zuINDEX>
-consteval bool bigint_literal_test(Tbigint tBigInt, std::tuple<Tvalue...> const& tupleValue, std::index_sequence<zuINDEX...>)
+#ifdef __cpp_consteval
+consteval
+#else
+constexpr
+#endif
+bool bigint_literal_test(Tbigint tBigInt, std::tuple<Tvalue...> const& tupleValue, std::index_sequence<zuINDEX...>)
 {
     bool const abTest[]
     {
@@ -31,12 +41,22 @@ consteval bool bigint_literal_test(Tbigint tBigInt, std::tuple<Tvalue...> const&
     return bResult;
 }
 template <typename Tbigint, typename... Tvalue>
-consteval bool bigint_literal_test(Tbigint tBigInt, std::tuple<Tvalue...> const& tupleValue)
+#ifdef __cpp_consteval
+consteval
+#else
+constexpr
+#endif
+bool bigint_literal_test(Tbigint tBigInt, std::tuple<Tvalue...> const& tupleValue)
 {
     return bigint_literal_test(tBigInt, tupleValue, std::index_sequence_for<Tvalue...>());
 }
 template <typename... Tbigint, size_t... zuINDEX, typename... Tvalue>
-consteval bool bigint_literal_test(std::tuple<Tbigint...> const& tupleBigInt, std::index_sequence<zuINDEX...>, std::tuple<Tvalue...> const& tupleValue)
+#ifdef __cpp_consteval
+consteval
+#else
+constexpr
+#endif
+bool bigint_literal_test(std::tuple<Tbigint...> const& tupleBigInt, std::index_sequence<zuINDEX...>, std::tuple<Tvalue...> const& tupleValue)
 {
     bool const abTest[]
     {
@@ -52,7 +72,12 @@ consteval bool bigint_literal_test(std::tuple<Tbigint...> const& tupleBigInt, st
     return bResult;
 }
 template <typename... Tbigint, typename... Tvalue>
-consteval bool bigint_literal_test(std::tuple<Tbigint...> const& tupleBigInt, std::tuple<Tvalue...> const& tupleValue)
+#ifdef __cpp_consteval
+consteval
+#else
+constexpr
+#endif
+bool bigint_literal_test(std::tuple<Tbigint...> const& tupleBigInt, std::tuple<Tvalue...> const& tupleValue)
 {
     return bigint_literal_test(tupleBigInt, std::index_sequence_for<Tbigint...>(), tupleValue);
 }
@@ -92,8 +117,17 @@ int main()
     static_assert((int)15_bigint == 15, "ha");
 
 //    __int128  nExample128 = -0x80000000000000000000000000000000_bigint;
+#ifndef __cpp_consteval
+    constexpr
+#endif
     long long nExample64 = -0x8000000000000000_bigint;
+#ifndef __cpp_consteval
+    constexpr
+#endif
     int       nExample32 = -0x80000000_bigint;
+#ifndef __cpp_consteval
+    constexpr
+#endif
     short     nExample16 = -0x8000_bigint;
 
     std::cout << "Hello World!\n";
