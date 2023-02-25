@@ -128,7 +128,8 @@ int main()
 #ifndef __cpp_consteval
     constexpr
 #endif
-    short     nExample16 = -0x8000_bigint;
+    short     nExample16a = -0x8000_bigint;
+    short     nExample16b =  0x7FFF_bigint;
 
     std::cout << "Hello World!\n";
 }

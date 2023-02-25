@@ -54,14 +54,24 @@ namespace jrmwng
 							}
 						}
 
+						Tint tInt1;
 						if (bNEGATE)
 						{
-							tInt = tInt * tMulti - tDigit;
+							tInt1 = tInt * tMulti - tDigit;
+							if (tInt1 > tInt)
+							{
+								throw;
+							}
 						}
 						else
 						{
-							tInt = tInt * tMulti + tDigit;
+							tInt1 = tInt * tMulti + tDigit;
+							if (tInt1 < tInt)
+							{
+								throw;
+							}
 						}
+						tInt = tInt1;
 					}
 				}
 				return tInt;
